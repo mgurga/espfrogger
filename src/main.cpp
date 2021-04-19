@@ -26,6 +26,7 @@ int lastupdateframe = 0;
 bool alive = true;
 
 Button2 btn1(35);
+Button2 btn2(0);
 
 void drawScore()
 {
@@ -161,6 +162,14 @@ void btn1click()
     }
 }
 
+void btn2click()
+{
+    if (!(score % ROADS_ON_SCREEN == 0))
+    {
+        score--;
+    }
+}
+
 void died()
 {
     alive = false;
@@ -185,6 +194,7 @@ void setup()
     generateRoads(ROADS_ON_SCREEN);
 
     btn1.setClickHandler([](Button2 &b) { btn1click(); });
+    btn2.setClickHandler([](Button2 &b) { btn2click(); });
 }
 
 void loop()
@@ -210,6 +220,7 @@ void loop()
     if (alive)
     {
         btn1.loop();
+        btn2.loop();
         frame++;
     }
 }
