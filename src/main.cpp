@@ -90,9 +90,10 @@ void generateRoads(int len)
             {
                 cars[roadlength + i].color = carcolors[random(7)];
                 cars[roadlength + i].width = 30 + random(50);
-                cars[roadlength + i].speed = 5 + random(5);
+                cars[roadlength + i].speed = 5 + random(score / 2);
                 cars[roadlength + i].moveright = ((random(2) % 2) == 0);
-                cars[roadlength + i].x = cars[roadlength + i].moveright ? -100 : tft.width() + 100;
+                cars[roadlength + i].x = random(tft.width());
+                // cars[roadlength + i].x = cars[roadlength + i].moveright ? -100 : tft.width() + 100;
             }
         }
     }
