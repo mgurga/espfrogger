@@ -23,12 +23,14 @@ int score = 0;
 int scroll = 0;
 int frame = 0;
 int lastupdateframe = 0;
+bool alive = true;
 
 Button2 btn1(35);
 
 void drawScore()
 {
-    String out = String("Score: ") + String(score);
+    String out = String(score);
+    tft.setTextSize(2);
     tft.drawString(out, 0, 0);
 }
 
@@ -65,7 +67,7 @@ void drawRoad()
         }
 
         // draw score on road
-        tft.drawString(String(scroll + i), 0, tftheight - (i * ROAD_LENGTH) - ROAD_LENGTH);
+        // tft.drawString(String(scroll + i), 0, tftheight - (i * ROAD_LENGTH) - ROAD_LENGTH);
     }
 }
 
@@ -126,6 +128,23 @@ void moveCars()
     }
 }
 
+bool checkForCollision()
+{
+    if (roads[score] == 1)
+    {
+        Car carInRoad = cars[score];
+        int frogsize = ROAD_LENGTH - 10;
+        int frogx = (tft.width() / 2) - (frogsize / 2);
+
+        if (carInRoad.x + carInRoad.width > frogx && frogx + frogsize > carInRoad.x)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 void resetFrame()
 {
     frame = 0;
@@ -140,6 +159,15 @@ void btn1click()
         scroll += ROADS_ON_SCREEN;
         generateRoads(ROADS_ON_SCREEN);
     }
+}
+
+void died()
+{
+    alive = false;
+    tft.setTextColor(TFT_RED);
+    tft.setTextFont(1);
+    tft.setTextSize(2);
+    tft.drawCentreString("YOU DIED", tft.width() / 2, tft.height() / 2, 1);
 }
 
 void setup()
@@ -161,8 +189,14 @@ void setup()
 
 void loop()
 {
-    drawRoad();
-    drawScore();
+    if (alive)
+    {
+        drawRoad();
+        drawScore();
+    }
+
+    if (checkForCollision())
+        died();
 
     if (frame - lastupdateframe >= 10)
     {
@@ -173,6 +207,9 @@ void loop()
     if (frame == INT_MAX)
         resetFrame();
 
-    btn1.loop();
-    frame++;
+    if (alive)
+    {
+        btn1.loop();
+        frame++;
+    }
 }
